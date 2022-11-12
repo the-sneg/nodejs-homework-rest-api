@@ -14,6 +14,11 @@ const contactSchema = new Schema(
     phone: {
       type: String,
     },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
     favorite: {
       type: Boolean,
       default: false,
@@ -42,10 +47,15 @@ const updateFavoriteShema = Joi.object({
   favorite: Joi.boolean().required(),
 });
 
+const subscriptionSchema = Joi.object({
+  subscription: Joi.string().required(),
+});
+
 const schemas = {
   addSchema,
   updateScema,
   updateFavoriteShema,
+  subscriptionSchema,
 };
 
 const Contact = model("contact", contactSchema);
