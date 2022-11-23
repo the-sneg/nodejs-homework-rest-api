@@ -28,6 +28,10 @@ const userSchema = new Schema(
     token: {
       type: String,
     },
+    avatarURL: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
@@ -45,7 +49,6 @@ userSchema.pre("save", async function (next) {
   user.password = hashedPassword;
   next();
 });
-
 
 const User = model("user", userSchema);
 
