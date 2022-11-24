@@ -59,32 +59,6 @@ async function updateSubscription(req, res, next) {
   res.json(updatedSubscription);
 }
 
-// async function changeImageUrl(req, res, next) {
-//   // 1 - save file in public/images
-//   console.log(req.file);
-//   const { _id: id } = req.user;
-//   const newPath = path.join(
-//     __dirname,
-//     "../../public/avatars",
-//     id + req.file.filename
-//   );
-
-//   // 2
-
-//   const userId = req.params.id;
-//   console.log(req.params.id);
-//   const userImage = "/public/avatars/" + id + req.file.filename;
-
-//   const savedUser = await User.findOneAndUpdate(
-//     userId,
-//     {
-//       avatarURL: userImage,
-//     },
-//     { new: true }
-//   );
-
-//   return res.status(201).json({ data: { user: savedUser } });
-// }
 const avatarsDir = path.join(__dirname, "../../public/avatars");
 const changeImageUrl = async (req, res) => {
   const { path: tempFile, originalname } = req.file;
