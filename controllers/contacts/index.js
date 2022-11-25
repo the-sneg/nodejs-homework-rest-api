@@ -4,6 +4,7 @@ const add = require("./add");
 const updateById = require("./updateById");
 const removeById = require("./removeById");
 const updateFavorite = require("./updateFavorite");
+const changeImageUrl = require("./changeImg");
 
 module.exports = {
   getAll,
@@ -12,4 +13,5 @@ module.exports = {
   updateById,
   removeById,
   updateFavorite,
+  changeImageUrl,
 };

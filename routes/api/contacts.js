@@ -4,6 +4,8 @@ const ctrl = require("../../controllers/contacts");
 const { schemas } = require("../../models/contact");
 const { ctrlWrapper } = require("../../helpers");
 const { validateBody, isValidId } = require("../../middelwares");
+const { tryCatchWrapper } = require("../../helpers/index");
+const { upload } = require("../../middelwares/uploadFile");
 
 router.get("/", ctrlWrapper(ctrl.getAll));
 
@@ -25,6 +27,12 @@ router.patch(
   // isValidId,
   validateBody(schemas.updateFavoriteShema),
   ctrlWrapper(ctrl.updateFavorite)
+);
+
+router.patch(
+  "/:id/image",
+  tryCatchWrapper(upload.single("image")), // save it tmp directory
+  tryCatchWrapper(ctrl.changeImageUrl)
 );
 
 module.exports = router;

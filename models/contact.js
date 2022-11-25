@@ -17,11 +17,14 @@ const contactSchema = new Schema(
     owner: {
       type: Schema.Types.ObjectId,
       ref: "user",
-      required: true,
+      // required: true,
     },
     favorite: {
       type: Boolean,
       default: false,
+    },
+    image: {
+      type: String,
     },
   },
   { versionKey: false }
@@ -34,6 +37,7 @@ const addSchema = Joi.object({
   email: Joi.string(),
   phone: Joi.string(),
   favorite: Joi.boolean(),
+  image: Joi.string(),
 });
 
 const updateScema = Joi.object({

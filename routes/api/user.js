@@ -5,6 +5,7 @@ const { tryCatchWrapper } = require("../../helpers/index");
 const { validateBody } = require("../../middelwares");
 const { auth } = require("../../middelwares/auth");
 const { schemas } = require("../../models/contact");
+const { upload } = require("../../middelwares/uploadFile");
 const usersRouter = express.Router();
 const { subscriptionSchema } = schemas;
 
@@ -30,6 +31,13 @@ usersRouter.patch(
   "/:userId/subscription",
   validateSubscription,
   tryCatchWrapper(usersController.updateSubscription)
+);
+
+usersRouter.patch(
+  "/avatars",
+  tryCatchWrapper(auth),
+  tryCatchWrapper(upload.single("avatar")), // save it tmp directory
+  tryCatchWrapper(usersController.changeImageUrl)
 );
 
 module.exports = {
