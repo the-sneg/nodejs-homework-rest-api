@@ -32,6 +32,15 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+
+    verifyToken: {
+      type: String, // token to verify email
+      default: null,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
