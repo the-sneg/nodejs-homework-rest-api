@@ -1,5 +1,5 @@
 const { User } = require("../../models/user");
-const { Conflict, Unauthorized, NotFound } = require("http-errors");
+const { Conflict, Unauthorized, NotFound, BadRequest } = require("http-errors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const gravatar = require("gravatar");
@@ -7,25 +7,25 @@ const { nanoid } = require("nanoid");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET, META_PASSWORD } = process.env;
 
 async function sendRegisterEmail({ email, token }) {
   const transport = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
+    host: "smtp.meta.ua",
+    port: 465,
     auth: {
-      user: "2b4f759d66bcac", // TODO: move to .env
-      pass: "9757adc46bd183", // TODO: move to .env
+      user: "the_sneg@meta.ua",
+      pass: META_PASSWORD,
     },
   });
 
-  const url = `localhost:3000/api/auth/verify/${token}`;
+  const url = `<a target="_blank" href="http://localhost:3000/api/auth/verify/${token}>to verify your email</a>`;
 
   const emailBody = {
-    from: "info@contacts.com",
+    from: "the_sneg@meta.ua",
     to: email,
     subject: "Please verify your email",
-    html: `<h1> Please open this link: ${url} to verify your email <h1>`,
+    html: `<div>Please open this link:</div> ${url} `,
     text: `Please open this link: ${url} to verify your email`,
   };
 
@@ -49,6 +49,7 @@ async function verifyEmail(req, res, next) {
   if (!user.isVerified) {
     await User.findByIdAndUpdate(user._id, {
       isVerified: true,
+      verifyToken: null,
     });
     return res.json({
       message: "Email has been successfully verified",
@@ -61,6 +62,27 @@ async function verifyEmail(req, res, next) {
       message: "Your Email already verified",
     });
   }
+}
+
+async function recent(req, res, next) {
+  const { email } = req.body;
+  if (!email) {
+    throw BadRequest("Missing required field email");
+  }
+  const user = await User.findOne({ email });
+
+  if (!user || user.isVerified) {
+    return res.json({
+      message: "Verification has already been passed",
+    });
+  }
+
+  await sendRegisterEmail({ email, token: user.verifyToken });
+
+  console.log(user.verifyToken);
+  res.status(200).json({
+    message: "Verification email sent",
+  });
 }
 
 async function register(req, res, next) {
@@ -135,4 +157,5 @@ module.exports = {
   login,
   logout,
   verifyEmail,
+  recent,
 };

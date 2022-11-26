@@ -14,6 +14,8 @@ authRouter.post(
   tryCatchWrapper(authController.logout)
 );
 
+authRouter.post("/verify", tryCatchWrapper(authController.recent));
+
 module.exports = {
   authRouter,
 };
